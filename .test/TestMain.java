@@ -1,79 +1,90 @@
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMain {
     @Test
-    @DisplayName("testFullConstructor")
-    void testFullConstructor() {
-        Constructor constructor = null;
-        DACArecipient person = null;
-        try
-        {
-            constructor = DACArecipient.class.getDeclaredConstructor(
-                    String.class, String.class, String.class, String.class, int.class, int.class, int.class, char.class);
-            person = (DACArecipient) constructor.newInstance("Hernandez", "Alex", "25-6-567", "Mexico", 2451257, 39567322, 39567818, 'F');
-        } catch (NoSuchMethodException e)
-        {
-            throw new RuntimeException("Correct DACArecipeint constructor not found.");
-        } catch (InvocationTargetException e)
-        {
-            throw new RuntimeException("An error occured constructing the DACArecipient object.", e);
-        } catch (InstantiationException e)
-        {
-            throw new RuntimeException("An error occured constructing the DACArecipient object.", e);
-        } catch (IllegalAccessException e)
-        {
-            throw new RuntimeException("An error occured constructing the DACArecipient object, is your constructor public?", e);
-        }
+    @DisplayName("testArrayString")
+    void testArrayString() {
+        int[] copyOdd= {42, 16, 12, 84, 77, 26, 53};
+        int[] copyRep= {2, 5, 2, 9, 2, 5, 2, 9, 5};
 
-//Tests if the Full Constructor actually sets all the instance variables (requires toString() to run)
-        String string = person.toString();
-        boolean result =
-                (string.contains("Hernandez") &&
-                        string.contains("Alex") &&
-                        string.contains("25-6-567") &&
-                        string.contains("Mexico") &&
-                        string.contains("2451257") &&
-                        string.contains("39567322") &&
-                        string.contains("39567818") &&
-                        string.contains("F"));
+        String answerOdd = "{ 42, 16, 12, 84, 77, 26, 53 }";
+        String answerRep = "{ 2, 5, 2, 9, 2, 5, 2, 9, 5 }";
 
-        assertEquals(true, result);
-
+        assertEquals(answerOdd, ArrayMethods.arrayString(copyOdd));
+        assertEquals(answerRep, ArrayMethods.arrayString(copyRep));
     }
 
     @Test
-    @DisplayName("testDefaultConstructor")
-    void testDefaultConstructor() {
-        DACArecipient person = new DACArecipient();
-//Tests whether instance variables are set to the expected default values by checking the toString() for the expected number of occurances for "Unknown", 2415021, and X (case insensitive).
+    @DisplayName("testSelectionSort")
+    void testSelectionSort() {
+        int[] copyOdd= {42, 16, 12, 84, 77, 26, 53};
+        int[] copyEven= {5, 7, 9, 6, 8, 3};
+        int[] copyNeg = {24, 0, -13, 5, -4, 17, -20, -10};
+        int[] copyRep= {2, 5, 2, 9, 2, 5, 2, 9, 5};
 
-        String a[] = person.toString().split("-|;|,|\\s|\\r?\\n"); //Multiple delimeters is in case the toString seperates entires by hyphens, semicolons, commas, spaces, or newlines
+        int[] answerOdd = { 12, 16, 26, 42, 53, 77, 84 };
+        int[] answerEven = { 3, 5, 6, 7, 8, 9 };
+        int[] answerNeg = { -20, -13, -10, -4, 0, 5, 17, 24 };
+        int[] answerRep = { 2, 2, 2, 2, 5, 5, 5, 9, 9 };
 
-//Search for occurances
-        int numUnknown = 0;
-        int numInteger = 0;
-        int numChar = 0;
+        ArrayMethods.selectionSort(copyOdd);
+        ArrayMethods.selectionSort(copyEven);
+        ArrayMethods.selectionSort(copyNeg);
+        ArrayMethods.selectionSort(copyRep);
 
-        for (int i = 0; i < a.length; i++)
-        {
-            // if match found increase count (case insensitive)
-            if ("unknown".equals(a[i].toLowerCase()))
-                numUnknown++;
-            if ("2415021".equals(a[i].toLowerCase()))
-                numInteger++;
-            if ("x".equals(a[i].toLowerCase()))
-                numChar++;
-        }
-
-        boolean result = (numUnknown == 4 && numInteger == 3 && numChar == 1);
-
-        assertEquals(true, result);
+        assertArrayEquals(answerOdd, copyOdd);
+        assertArrayEquals(answerEven, copyEven);
+        assertArrayEquals(answerNeg, copyNeg);
+        assertArrayEquals(answerRep, copyRep);
     }
 
+    @Test
+    @DisplayName("testSwap")
+    void testSwap() {
+        int[] copyNeg = {24, 0, -13, 5, -4, 17, -20, -10};
+        int[] copyRep= {2, 5, 2, 9, 2, 5, 2, 9, 5};
+
+        int[] answerNeg = { 24, 0, -20, 5, -4, 17, -13, -10 };
+        int[] answerRep = { 2, 5, 9, 9, 2, 5, 2, 2, 5 };
+
+        ArrayMethods.swap(copyNeg, 2, 6);
+        ArrayMethods.swap(copyRep, 7, 2);
+
+        assertArrayEquals(answerNeg, copyNeg);
+        assertArrayEquals(answerRep, copyRep);
+    }
+
+    @Test
+    @DisplayName("testReverse")
+    void testReverse() {
+        int[] copyOdd= {42, 16, 12, 84, 77, 26, 53};
+        int[] copyEven= {5, 7, 9, 6, 8, 3};
+
+        int[] answerOdd = { 53, 26, 77, 84, 12, 16, 42 };
+        int[] answerEven = { 3, 8, 6, 9, 7, 5 };
+
+        ArrayMethods.reverse(copyOdd);
+        ArrayMethods.reverse(copyEven);
+
+        assertArrayEquals(answerOdd, copyOdd);
+        assertArrayEquals(answerEven, copyEven);
+    }
+
+    @Test
+    @DisplayName("testIndexOfMin")
+    void testIndexOfMin() {
+
+        int[] copyOdd= {42, 16, 12, 84, 77, 26, 53};
+        int[] copyEven= {5, 7, 9, 6, 8, 3};
+        int[] copyNeg = {24, 0, -13, 5, -4, 17, -20, -10};
+
+        assertFalse(-20 == ArrayMethods.indexOfMin(copyNeg,0));
+        assertEquals(6, ArrayMethods.indexOfMin(copyNeg,0));
+        assertEquals(2, ArrayMethods.indexOfMin(copyOdd,0));
+        assertEquals(5, ArrayMethods.indexOfMin(copyOdd,3));
+        assertEquals(5, ArrayMethods.indexOfMin(copyEven,2));
+    }
 }
